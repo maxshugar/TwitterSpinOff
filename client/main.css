@@ -1,0 +1,63 @@
+/* CSS declarations go here */
+/* https://freebiesupply.com/blog/css-button-hover-effects/ */
+.list-group-item { word-wrap: break-word; }
+#loginForm{
+	max-width: 400px;
+	padding: 20px 38px 66px;
+	margin: 10% auto;
+	background: transparent;
+	border: 2px solid white;
+	border-radius: 5px;
+}
+#loginForm .form-group input{
+	background: transparent;
+	color: white;
+	-webkit-transition: all 600ms ease;
+    transition: all 600ms ease;
+}
+#loginForm input{
+	background: transparent;
+	color: white;
+	-webkit-transition: all 600ms ease;
+    transition: all 600ms ease;
+	
+}
+form h1{
+	margin: 20px;
+	color: white;
+}
+input[type="submit"]:hover { 
+	background-color: rgba(0, 0, 255, 0.3) !important;   /* blue with opacity */ 
+}
+.form-control::-webkit-input-placeholder { color: white; }  /* WebKit, Blink, Edge */
+.form-control:-moz-placeholder { color: white; }  /* Mozilla Firefox 4 to 18 */
+.form-control::-moz-placeholder { color: white; }  /* Mozilla Firefox 19+ */
+.form-control:-ms-input-placeholder { color: white; }  /* Internet Explorer 10-11 */
+.form-control::-ms-input-placeholder { color: white; }  /* Microsoft Edge */
+input.error{
+    background-color:rgb(255, 231, 231);
+	color: white;
+}
+.container{
+	position: relative;
+}
+.error {
+      color: white;
+}
+input.error{
+    background-color:rgba(255, 0, 0, 0.4) !important;
+}
+#particles-js{
+	background: url('/images/space.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-color: #b61924;
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index:-100; 
+}
