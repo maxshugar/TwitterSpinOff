@@ -6,7 +6,7 @@
 <body>
 <div id='particles-js'></div>
 	{{#if currentUser}}
-		{{> dashboard}}
+		{{> newsFeed}}
 	{{else}}
 		<div class='container'>
 			<div id="loginForm">
@@ -23,7 +23,7 @@
 	{{/if}}
 </body>
 
-<template name="dashboard">
+<template name="newsFeed">
   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 10px;">
 		<div class="container">	
 			<a class="navbar-brand" href="#"></a>
@@ -56,7 +56,7 @@
 							<a class="dropdown-item logout" href="#">Logout</a>
 						</div>
 				</li>
-					<button class="btn btn-primary navbar-btn add-tweet-btn" href="#">Tweet</button>
+					<button class="btn btn-primary navbar-btn add-tweet-btn" href="#"><span class="fa fa-twitter" aria-hidden="true"></span> Tweet</button>
 			</div>
 		</div>
 	</nav>
@@ -92,8 +92,8 @@
 									<small>{{formatDate createdAt}}</small>
 									{{#if isCurrentUser email}}
 										<div>
-											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-arrow-up" aria-hidden="true"></span> Update</button>
-											<button type="button" class="btn btn-primary delete-btn"><span class="fa fa-times" aria-hidden="true"></span> Delete</button>
+											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-refresh" aria-hidden="true"></span> Update</button>
+											<button type="button" class="btn btn-primary delete-btn"><span class="fa fa-close" aria-hidden="true"></span> Delete</button>
 										</div>
 									{{/if}}
 								</div>
@@ -110,17 +110,20 @@
 									</button>
 								  </div>
 								  <div class="modal-body">
-									<form class="tweet-form-modal-update">
-										<div class="form-group">
-											<input id="updateTextBox" autocomplete="off" type="text" class="form-control" name="tweet" placeholder="What's happening?">
-											<!--<input id="update_id" type="text" class="form-control" name="update_id" hidden>-->
-											<small class="form-text text-muted char-count-modal-update">140</small>
+										<div class="tweetbox-container">
+											<div class="panel panel-default tweetbox">
+												<div class="panel-body">
+													<!-- Text box for tweet content -->
+													<textarea class="form-control" id="update_tweetText" placeholder="What's happening?" rows="3"></textarea>
+													<!-- Character count & button -->
+													<div class="pull-right btnGroup">
+														<strong class="{{charClass}}">{{charCount}}</strong>
+														<button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Close</button>
+														<button id="update-tweet" class="btn btn-info pull-right" type="button" {{disableButton}}><span class="fa fa-twitter" aria-hidden="true"></span> Update</button>
+													</div>
+												</div>
+											</div>
 										</div>
-									</form>
-								  </div>
-								  <div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-primary update-tweet-btn">Update</button>
 								  </div>
 								</div>
 							  </div>
@@ -144,59 +147,55 @@
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">
 		  <div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel">Compose New Tweet</h5>
+			<h5 class="modal-title" id="exampleModalLabel">Compose a New Tweet</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
 		  </div>
 		  <div class="modal-body">
-			{{> tweetFormModal}}
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-primary submit-tweet-btn">Tweet</button>
+			<!--{{> tweetFormModal}}-->
+			{{> addTweetModal}}
 		  </div>
 		</div>
 	  </div>
 	</div>
 </template>
 
-<template name="tweetBox">  
+<template name="tweetBox">
   <div class="tweetbox-container">
     <div class="panel panel-default tweetbox">
       <div class="panel-body">
         <!-- Text box for tweet content -->
         <textarea class="form-control" id="tweetText" placeholder="What's happening?" rows="3"></textarea>
-
         <!-- Character count & button -->
         <div class="pull-right btnGroup">
           <strong class="{{charClass}}">{{charCount}}</strong>
-          <button class="btn btn-info pull-right" type="button" {{disableButton}}>Tweet</button>
+          <button class="btn btn-info pull-right" type="button" {{disableButton}}><span class="fa fa-twitter" aria-hidden="true"></span> Tweet</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<template name="tweetForm">
-	<form class="tweet-form">
-		<div class="form-group">
-			<input autocomplete="off" type="text" class="form-control" name="tweet" placeholder="What's happening?">
-			<small class="form-text text-muted char-count">140</small>
-		</div>
-	</form>
+<template name="addTweetModal">
+	<div class="tweetbox-container">
+    <div class="panel panel-default tweetbox">
+      <div class="panel-body">
+        <!-- Text box for tweet content -->
+        <textarea class="form-control" id="modal_tweetText" placeholder="What's happening?" rows="3"></textarea>
+        <!-- Character count & button -->
+        <div class="pull-right btnGroup">
+          <strong class="{{charClass}}">{{charCount}}</strong>
+		  <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Close</button>
+          <button class="add-btn btn btn-info pull-right" type="button" {{disableButton}}><span class="fa fa-twitter" aria-hidden="true"></span> Tweet</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<template name="tweetFormModal">
-	<form class="tweet-form-modal">
-		<div class="form-group">
-			<input autocomplete="off" type="text" class="form-control" name="tweet" placeholder="What's happening?">
-			<small class="form-text text-muted char-count-modal">140</small>
-		</div>
-		<!--<button type="submit" class="btn btn-default">Submit</button> -->
-	</form>
-</template>
-	
+<!---------------------------------- LOGIN TEMPLATES -------------------------------->
+
 <template name="welcomeMessage">
 	<h1 style="color: white; text-decoration: none;">{{message}}</h1>
 </template>

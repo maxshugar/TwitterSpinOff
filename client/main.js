@@ -5,6 +5,43 @@ import './main.html';
 
 if (Meteor.isClient){
 	
+	/*************************** ADD TWEET MODAL ***************************************/
+	
+	Template.addTweetModal.onRendered(function () {  
+	  Session.set('numChars_', 0);
+	});
+	
+	Template.addTweetModal.events({  
+		'input #modal_tweetText': function(){
+			Session.set('numChars_', $('#modal_tweetText').val().length);
+		  },
+		  'click .add-btn': function() { 
+			  var tweet = $('#modal_tweetText').val();
+			  $('#modal_tweetText').val("");
+			  Session.set('numChars_', 0);
+			  tweets.insert({ text: tweet, user_id: Meteor.user()._id, email: Meteor.user().emails[0].address, createdAt: Date.now() });
+			  $('#tweetModal').modal('hide');
+			}
+	});
+	
+	Template.addTweetModal.helpers({
+		charCount: function() {
+			return 140 - Session.get('numChars_');
+		},
+		charClass: function() {
+			if (Session.get('numChars_') > 140) {
+				return 'errCharCount';    //css class name
+			} else {
+				return 'charCount';       //css class name
+			}
+		},
+		disableButton: function() {
+			if (Session.get('numChars_') <= 0 || Session.get('numChars_') > 140) {
+				return 'disabled';
+			}
+		}
+	});
+	
 	/****************************** TWEET BOX ******************************************/
 	
 	Template.tweetBox.onRendered(function () {  
@@ -15,11 +52,11 @@ if (Meteor.isClient){
 		'input #tweetText': function(){
 			Session.set('numChars', $('#tweetText').val().length);
 		  },
-		  'click button': function() {  
+		  'click button': function() { 
 			  var tweet = $('#tweetText').val();
 			  $('#tweetText').val("");
 			  Session.set('numChars', 0);
-			  //Tweets.insert({message: tweet});
+			  tweets.insert({ text: tweet, user_id: Meteor.user()._id, email: Meteor.user().emails[0].address, createdAt: Date.now() });
 			}
 	});
 	
@@ -41,42 +78,7 @@ if (Meteor.isClient){
 		}
 	});
 	
-	Template.tweetForm.onRendered(function(){
-		$('.tweet-form').validate({
-			rules: {
-				tweet: {
-					required: true,
-					maxlength: 140
-				}
-			}
-		});
-	});
-	
-	Template.tweetFormModal.onRendered(function(){
-		$('.tweet-form-modal').validate({
-			rules: {
-				tweet: {
-					required: true,
-					maxlength: 140
-				}
-			}
-		});
-	});
-	
-	Template.dashboard.onRendered(function(){
-		$('.tweet-form-modal-update').validate({
-			rules: {
-				tweet: {
-					required: true,
-					maxlength: 140
-				}
-			}
-		});
-	});
-	
-	function submitTweet(data){
-		tweets.insert({ text: data, user_id: Meteor.user()._id, email: Meteor.user().emails[0].address, createdAt: Date.now() });
-	}
+	/***************************** HELPERS **********************************/
 	
 	Template.registerHelper('formatTime', function(createdAt) {
 	  return moment(createdAt).fromNow();
@@ -95,68 +97,50 @@ if (Meteor.isClient){
 			}
 	});
 	
-	Template.dashboard.helpers({
+	Template.newsFeed.helpers({
 		tweets: function(){
 			return tweets.find({}, {
 				sort: { createdAt: -1 }
 			});
+		},
+		charCount: function() {
+			return 140 - Session.get('numChars__');
+		},
+		charClass: function() {
+			if (Session.get('numChars__') > 140) {
+				return 'errCharCount';    //css class name
+			} else {
+				return 'charCount';       //css class name
+			}
+		},
+		disableButton: function() {
+			if (Session.get('numChars__') <= 0 || Session.get('numChars__') > 140) {
+				return 'disabled';
+			}
 		}
 	});
 	
-	/* OLD
-	Template.tweetForm.events({
-		'submit .tweet-form' : function(e){
-			e.preventDefault();
-			submitTweet(e.target.tweet.value);
-			e.target.tweet.value = '';
-	  },
-	  'keyup .tweet-form [name="tweet"]' : function(e){
-			var availableCharCount = 140 - e.target.value.length;
-			$('.char-count').text(availableCharCount);
-	  }
-	});
-	*/
+	/************************** News Feed **************************************************/
 	
-	Template.tweetBox.events({
-		'submit .tweet-form' : function(e){
-			e.preventDefault();
-			alert(1);
-	  }
+	Template.newsFeed.onRendered(function () {  
+	  Session.set('numChars__', 0);
 	});
 	
-	Template.tweetFormModal.events({
-		'submit .tweet-form-modal' : function(e){
-			e.preventDefault();
-			submitTweet(e.target.tweet.value);
-			$('#tweetModal .tweet-form-modal')[0].tweet.value = '';
-	  },
-	  'keyup .tweet-form-modal [name="tweet"]' : function(e){
-			var availableCharCount = 140 - e.target.value.length;
-			$('.char-count-modal').text(availableCharCount);
-		}
-	});
-	
-	Template.dashboard.events({
+	Template.newsFeed.events({
 		'click .add-tweet-btn' : function(){
 			$('#tweetModal').modal();
-			$('#tweetModal .modal-body').clone($('.tweet-form'));
 		},
-		'click .submit-tweet-btn' : function(e){
-			e.preventDefault();
-			if($('.tweet-form-modal').valid()){
-				submitTweet($('#tweetModal .tweet-form-modal')[0].tweet.value);
-			}
-			$('#tweetModal .tweet-form-modal')[0].tweet.value = '';
+		'input #update_tweetText': function(){
+			Session.set('numChars__', $('#update_tweetText').val().length);
 		},
-		'click .update-tweet-btn' : function(e){
+		'click #update-tweet' : function(e){
 			e.preventDefault();
 			var update_id = document.getElementById("update_id").value;
-			if($('.tweet-form-modal-update').valid()){
-				 tweets.update(update_id, {
-				  $set: { text: $('#updateModal .tweet-form-modal-update')[0].tweet.value },
-				});
-				$('#updateModal').modal('hide');
-			}
+			var tweet = $('#update_tweetText').val();
+			tweets.update(update_id, {
+				 $set: { text: tweet },
+			});
+			$('#updateModal').modal('hide');
 		},
 		'click .delete-btn' : function(e){
 			e.preventDefault();
@@ -173,13 +157,14 @@ if (Meteor.isClient){
 				closeOnCancel: false
 			},
 			function(isConfirm) {
+				tweets.remove(id);
 				if (isConfirm) {
 					swal({
 						title: 'Deleted!',
 						text: 'Your tweet was successfully deleted!',
 						type: 'success'
 					}, function() {
-						tweets.remove(id);
+						//tweets.remove(id);
 					});
 				} else {
 					swal("Cancelled", "Your tweet is safe :)", "error");
@@ -189,21 +174,9 @@ if (Meteor.isClient){
 		'click .update-btn' : function(e){
 			e.preventDefault();
 			$('#updateModal').modal();
-			document.getElementById("updateTextBox").value = this.text; 
+			document.getElementById("update_tweetText").value = this.text; 
 			document.getElementById("update_id").value = this._id;
-			$('.char-count-modal-update').text(140 - this.text.length);
-		},
-		'submit .tweet-form-modal-update' : function(e){
-			e.preventDefault();
-			var update_id = document.getElementById("update_id").value;
-			tweets.update(update_id, {
-				$set: { text: $('#updateModal .tweet-form-modal-update')[0].tweet.value },
-			});
-			$('#updateModal').modal('hide');
-		},
-		'keyup .tweet-form-modal-update [name="tweet"]' : function(e){
-			var availableCharCount = 140 - e.target.value.length;
-			$('.char-count-modal-update').text(availableCharCount);
+			Session.set('numChars__', $('#update_tweetText').val().length);
 		}
 	});
 	
@@ -365,7 +338,7 @@ if (Meteor.isClient){
 			Session.set('showLogin', true);
 		}
 	});
-	Template.dashboard.events({
+	Template.newsFeed.events({
 		'click .logout': function(event){
 			event.preventDefault();
 			Meteor.logout();

@@ -1,46 +1,43 @@
 /* CSS declarations go here */
 /* https://freebiesupply.com/blog/css-button-hover-effects/ */
-
+.btn-close{
+	margin: 0px 5px;
+}
 .tweetbox-container {
   margin-bottom: 10px;
 }
-
 .tweetbox {
 	background-color: rgb(240, 247, 254);
 	padding: 20px;
 	padding-bottom: 60px;
 	border-radius: 5px;
 }
-
 .btnGroup {
   margin-top: 10px;
   display: flex;
   align-items: center;
 }
-
 .charCount {
-  margin-right: 10px;
+  margin-right: 5px;
   color: gray;
 }
-
 .errCharCount {
-  margin-right: 10px;
+  margin-right: 5px;
   color: red;
 }
-
 .update-btn{
 	margin-right: 10px;
 }
-::webkit-input-placeholder {
+.panel-body ::webkit-input-placeholder {
     color: grey !important;
 }
-::-ms-input-placeholder {
+.panel-body ::-ms-input-placeholder {
     color: grey !important;
 }
-::-moz-placeholder {
+.panel-body ::-moz-placeholder {
     color: grey !important;
 }
-:-moz-placeholder {
+.panel-body :-moz-placeholder {
     color: grey !important;
 }.tweet-form-modal .form-group ::webkit-input-placeholder {
     color: #00aced !important;
