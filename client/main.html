@@ -1,5 +1,6 @@
 	<head>
 	  <title>Maximum</title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 
 <body>
@@ -7,11 +8,10 @@
 	{{#if currentUser}}
 		{{> dashboard}}
 	{{else}}
-		
 		<div class='container'>
 			<div id="loginForm">
 				<div style="margin-bottom: 40px; margin-top: 20px; text-align: center;">
-				{{> welcomeMessage}}
+					{{> welcomeMessage}}
 				</div>
 				{{#if showLogin}}
 					{{> register}}
@@ -77,19 +77,55 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				{{> tweetForm}}
+				<!--{{> tweetForm}}-->
+				{{> tweetBox}}
 				{{#if tweets.count}}
 					<div class="list-group">
-					{{#each tweets}}
-						<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-						<div class="d-flex w-100 justify-content-between">
-							<h5 class="mb-1">{{email}}</h5>
-							<small>{{formatTime createdAt}}</small>
-						</div>
-							<p class="mb-1">{{text}}</p>
-							<small>{{formatDate createdAt}}</small>
-						</a> 
-					  {{/each}}
+						{{#each tweets}}
+							<a class="list-group-item list-group-item-action flex-column align-items-start">
+								<div class="d-flex w-100 justify-content-between">
+									<h5 class="mb-1">{{email}}</h5>
+									<small>{{formatTime createdAt}}</small>
+								</div>
+									<p class="mb-1">{{text}}</p>
+								<div class="d-flex w-100 justify-content-between">
+									<small>{{formatDate createdAt}}</small>
+									{{#if isCurrentUser email}}
+										<div>
+											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-arrow-up" aria-hidden="true"></span> Update</button>
+											<button type="button" class="btn btn-primary delete-btn"><span class="fa fa-times" aria-hidden="true"></span> Delete</button>
+										</div>
+									{{/if}}
+								</div>
+							</a>
+							<!-- Modal -->
+							<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<input id="update_id" type="text" class="form-control" name="update_id" hidden>
+							  <div class="modal-dialog" role="document">
+								<div class="modal-content">
+								  <div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Update Tweet</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								  </div>
+								  <div class="modal-body">
+									<form class="tweet-form-modal-update">
+										<div class="form-group">
+											<input id="updateTextBox" autocomplete="off" type="text" class="form-control" name="tweet" placeholder="What's happening?">
+											<!--<input id="update_id" type="text" class="form-control" name="update_id" hidden>-->
+											<small class="form-text text-muted char-count-modal-update">140</small>
+										</div>
+									</form>
+								  </div>
+								  <div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary update-tweet-btn">Update</button>
+								  </div>
+								</div>
+							  </div>
+							</div>
+						{{/each}}
 					</div>
 				{{else}}
 					<li class="list-group-item flex-column">No Tweets</li>
@@ -97,7 +133,7 @@
 			</div>
 			<div class="col-md-3">
 				<div class="card card-body bg-light" style="margin:5px;">
-					Who to follow
+					
 				</div>
 			</div>
 		</div>
@@ -108,13 +144,13 @@
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">
 		  <div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel">Add a tweet</h5>
+			<h5 class="modal-title" id="exampleModalLabel">Compose New Tweet</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
 		  </div>
 		  <div class="modal-body">
-			{{> tweetForm}}
+			{{> tweetFormModal}}
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -125,11 +161,37 @@
 	</div>
 </template>
 
+<template name="tweetBox">  
+  <div class="tweetbox-container">
+    <div class="panel panel-default tweetbox">
+      <div class="panel-body">
+        <!-- Text box for tweet content -->
+        <textarea class="form-control" id="tweetText" placeholder="What's happening?" rows="3"></textarea>
+
+        <!-- Character count & button -->
+        <div class="pull-right btnGroup">
+          <strong class="{{charClass}}">{{charCount}}</strong>
+          <button class="btn btn-info pull-right" type="button" {{disableButton}}>Tweet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template name="tweetForm">
 	<form class="tweet-form">
 		<div class="form-group">
 			<input autocomplete="off" type="text" class="form-control" name="tweet" placeholder="What's happening?">
 			<small class="form-text text-muted char-count">140</small>
+		</div>
+	</form>
+</template>
+
+<template name="tweetFormModal">
+	<form class="tweet-form-modal">
+		<div class="form-group">
+			<input autocomplete="off" type="text" class="form-control" name="tweet" placeholder="What's happening?">
+			<small class="form-text text-muted char-count-modal">140</small>
 		</div>
 		<!--<button type="submit" class="btn btn-default">Submit</button> -->
 	</form>

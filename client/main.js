@@ -5,7 +5,42 @@ import './main.html';
 
 if (Meteor.isClient){
 	
-	/*******************************ADD TWEET******************************************/
+	/****************************** TWEET BOX ******************************************/
+	
+	Template.tweetBox.onRendered(function () {  
+	  Session.set('numChars', 0);
+	});
+	
+	Template.tweetBox.events({  
+		'input #tweetText': function(){
+			Session.set('numChars', $('#tweetText').val().length);
+		  },
+		  'click button': function() {  
+			  var tweet = $('#tweetText').val();
+			  $('#tweetText').val("");
+			  Session.set('numChars', 0);
+			  //Tweets.insert({message: tweet});
+			}
+	});
+	
+	Template.tweetBox.helpers({
+		charCount: function() {
+			return 140 - Session.get('numChars');
+		},
+		charClass: function() {
+			if (Session.get('numChars') > 140) {
+				return 'errCharCount';    //css class name
+			} else {
+				return 'charCount';       //css class name
+			}
+		},
+		disableButton: function() {
+			if (Session.get('numChars') <= 0 || Session.get('numChars') > 140) {
+				return 'disabled';
+			}
+		}
+	});
+	
 	Template.tweetForm.onRendered(function(){
 		$('.tweet-form').validate({
 			rules: {
@@ -17,18 +52,47 @@ if (Meteor.isClient){
 		});
 	});
 	
-	function submitTweetForm(data){
+	Template.tweetFormModal.onRendered(function(){
+		$('.tweet-form-modal').validate({
+			rules: {
+				tweet: {
+					required: true,
+					maxlength: 140
+				}
+			}
+		});
+	});
+	
+	Template.dashboard.onRendered(function(){
+		$('.tweet-form-modal-update').validate({
+			rules: {
+				tweet: {
+					required: true,
+					maxlength: 140
+				}
+			}
+		});
+	});
+	
+	function submitTweet(data){
 		tweets.insert({ text: data, user_id: Meteor.user()._id, email: Meteor.user().emails[0].address, createdAt: Date.now() });
 	}
 	
 	Template.registerHelper('formatTime', function(createdAt) {
-	  //return moment(createdAt).format('MM-DD-YYYY');.fromNow();
 	  return moment(createdAt).fromNow();
 	});
 	
 	Template.registerHelper('formatDate', function(data) {
 	  return moment(data).format('MM-DD-YYYY h:m:s');
-	  //return moment(createdAt).fromNow();
+	});
+	
+	Template.registerHelper('isCurrentUser', function(username) {
+			if(username == Meteor.user().emails[0].address){
+				return true;
+			}
+			else{
+				return false;
+			}
 	});
 	
 	Template.dashboard.helpers({
@@ -39,15 +103,37 @@ if (Meteor.isClient){
 		}
 	});
 	
+	/* OLD
 	Template.tweetForm.events({
 		'submit .tweet-form' : function(e){
 			e.preventDefault();
-			submitTweetForm(e.target.tweet.value);
+			submitTweet(e.target.tweet.value);
+			e.target.tweet.value = '';
 	  },
 	  'keyup .tweet-form [name="tweet"]' : function(e){
 			var availableCharCount = 140 - e.target.value.length;
 			$('.char-count').text(availableCharCount);
 	  }
+	});
+	*/
+	
+	Template.tweetBox.events({
+		'submit .tweet-form' : function(e){
+			e.preventDefault();
+			alert(1);
+	  }
+	});
+	
+	Template.tweetFormModal.events({
+		'submit .tweet-form-modal' : function(e){
+			e.preventDefault();
+			submitTweet(e.target.tweet.value);
+			$('#tweetModal .tweet-form-modal')[0].tweet.value = '';
+	  },
+	  'keyup .tweet-form-modal [name="tweet"]' : function(e){
+			var availableCharCount = 140 - e.target.value.length;
+			$('.char-count-modal').text(availableCharCount);
+		}
 	});
 	
 	Template.dashboard.events({
@@ -57,7 +143,67 @@ if (Meteor.isClient){
 		},
 		'click .submit-tweet-btn' : function(e){
 			e.preventDefault();
-			submitTweetForm($('#tweetModal .tweet-form')[0].tweet.value);
+			if($('.tweet-form-modal').valid()){
+				submitTweet($('#tweetModal .tweet-form-modal')[0].tweet.value);
+			}
+			$('#tweetModal .tweet-form-modal')[0].tweet.value = '';
+		},
+		'click .update-tweet-btn' : function(e){
+			e.preventDefault();
+			var update_id = document.getElementById("update_id").value;
+			if($('.tweet-form-modal-update').valid()){
+				 tweets.update(update_id, {
+				  $set: { text: $('#updateModal .tweet-form-modal-update')[0].tweet.value },
+				});
+				$('#updateModal').modal('hide');
+			}
+		},
+		'click .delete-btn' : function(e){
+			e.preventDefault();
+			var id = this._id;
+			 swal({
+				title: "Are you sure?",
+				text: "You will not be able to recover this tweet!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Yes, I am sure!',
+				cancelButtonText: "No, cancel it!",
+				closeOnConfirm: false,
+				closeOnCancel: false
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					swal({
+						title: 'Deleted!',
+						text: 'Your tweet was successfully deleted!',
+						type: 'success'
+					}, function() {
+						tweets.remove(id);
+					});
+				} else {
+					swal("Cancelled", "Your tweet is safe :)", "error");
+				}
+			});
+		},
+		'click .update-btn' : function(e){
+			e.preventDefault();
+			$('#updateModal').modal();
+			document.getElementById("updateTextBox").value = this.text; 
+			document.getElementById("update_id").value = this._id;
+			$('.char-count-modal-update').text(140 - this.text.length);
+		},
+		'submit .tweet-form-modal-update' : function(e){
+			e.preventDefault();
+			var update_id = document.getElementById("update_id").value;
+			tweets.update(update_id, {
+				$set: { text: $('#updateModal .tweet-form-modal-update')[0].tweet.value },
+			});
+			$('#updateModal').modal('hide');
+		},
+		'keyup .tweet-form-modal-update [name="tweet"]' : function(e){
+			var availableCharCount = 140 - e.target.value.length;
+			$('.char-count-modal-update').text(availableCharCount);
 		}
 	});
 	
@@ -86,7 +232,7 @@ if (Meteor.isClient){
 		message: function(){
 			var split1 = Chronos.moment().format('MMM DD HH:mm:ss').split(':');
 			var split2 = split1[0].split(' ');
-			if(split2[2] <= 12){
+			if(split2[2] < 12){
 			   return "Good Morning";
 			}
 			if(split2[2] >= 12 && split2[2] < 18){
