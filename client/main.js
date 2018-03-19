@@ -100,7 +100,8 @@ if (Meteor.isClient){
 	Template.newsFeed.helpers({
 		tweets: function(){
 			return tweets.find({}, {
-				sort: { createdAt: -1 }
+				sort: { createdAt: -1 },
+				limit: 10
 			});
 		},
 		charCount: function() {

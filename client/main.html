@@ -80,16 +80,22 @@
 				<!--{{> tweetForm}}-->
 				{{> tweetBox}}
 				{{#if tweets.count}}
+					 
 					<div class="list-group">
 						{{#each tweets}}
-							<a class="list-group-item list-group-item-action flex-column align-items-start">
+						<div class="card bg-light mb-3">
+							<div class="card-header">
 								<div class="d-flex w-100 justify-content-between">
 									<h5 class="mb-1">{{email}}</h5>
 									<small>{{formatTime createdAt}}</small>
 								</div>
-									<p class="mb-1">{{text}}</p>
+							</div>
+							<div class="card-body">
+								<p class="card-text">{{text}}</p>
+							</div>
+							<div class="card-footer">
 								<div class="d-flex w-100 justify-content-between">
-									<small>{{formatDate createdAt}}</small>
+									<small class="text-muted">{{formatDate createdAt}}</small>
 									{{#if isCurrentUser email}}
 										<div>
 											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-refresh" aria-hidden="true"></span> Update</button>
@@ -97,7 +103,8 @@
 										</div>
 									{{/if}}
 								</div>
-							</a>
+							</div>
+						</div>
 							<!-- Modal -->
 							<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 								<input id="update_id" type="text" class="form-control" name="update_id" hidden>
