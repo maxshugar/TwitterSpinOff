@@ -77,16 +77,14 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<!--{{> tweetForm}}-->
 				{{> tweetBox}}
 				{{#if tweets.count}}
-					 
 					<div class="list-group">
 						{{#each tweets}}
 						<div class="card bg-light mb-3">
 							<div class="card-header">
 								<div class="d-flex w-100 justify-content-between">
-									<h5 class="mb-1">{{email}}</h5>
+									<h5 class="mb-1">@{{username}}</h5>
 									<small>{{formatTime createdAt}}</small>
 								</div>
 							</div>
@@ -96,7 +94,7 @@
 							<div class="card-footer">
 								<div class="d-flex w-100 justify-content-between">
 									<small class="text-muted">{{formatDate createdAt}}</small>
-									{{#if isCurrentUser email}}
+									{{#if isCurrentUser username}}
 										<div>
 											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-refresh" aria-hidden="true"></span> Update</button>
 											<button type="button" class="btn btn-primary delete-btn"><span class="fa fa-close" aria-hidden="true"></span> Delete</button>
@@ -138,12 +136,18 @@
 						{{/each}}
 					</div>
 				{{else}}
-					<li class="list-group-item flex-column">No Tweets</li>
+					<div class="card bg-light mb-3">
+						<div class="card-header">@twitter</div>
+						<div class="card-body">
+							<p class="card-text">No Tweets</p>
+						</div>
+						<div class="card-footer">Tweet Something!</div>
+					</div>
 				{{/if}}
 			</div>
 			<div class="col-md-3">
 				<div class="card card-body bg-light" style="margin:5px;">
-					
+
 				</div>
 			</div>
 		</div>
@@ -214,7 +218,7 @@
 <template name="login">	
 	<form id="LoginForm">
 		<div class="form-group">
-			<input placeholder="Email Address" class="form-control" type="email" name="loginEmail" required>
+			<input placeholder="Username" class="form-control" type="text" name="loginUsername" required>
 		</div>
 		<div class="form-group">
 			<input placeholder="Password" class="form-control" type="password" name="loginPassword" required>
@@ -229,7 +233,7 @@
 <template name="register">
 	<form id="RegisterForm">
 		<div class="form-group">
-			<input placeholder="Email Address" class="form-control" type="email" name="registerEmail" required>
+			<input placeholder="Username" class="form-control" type="text" name="registerUsername" required>
 		</div>
 		<div class="form-group">
 			<input id="password" placeholder="Password" class="form-control" type="password" name="registerPassword" required>

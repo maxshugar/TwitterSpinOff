@@ -1,108 +1,59 @@
 /* CSS declarations go here */
 /* https://freebiesupply.com/blog/css-button-hover-effects/ */
-.user-container {
-  #margin-top: 30px;
-  #margin-left: 30px;
-}
-.user-container h4 {
-  color: gray;
-}
-.user-container .table {
-  #margin-top: 10px;
-}
-.user-container .table th, .table td {
-   border-top: none;
-}
-.user-container .tableHeader {
-  color: gray;
-}
-.user-container .tableContent {
-  color: rgb(117, 187, 251);
-  font-size: 150%;
-}
-.user-container .fullbutton {
-  #width: 100%;
-}
-.user-container .input-sm {
-  #margin-bottom: 5px;
-}
-.user-container .login {
-  #margin-bottom: 15px;
-}
 .tweetfeed{
   background-color: rgb(240, 247, 254);
-}
-.tweetfeed-container{
+}.tweetfeed-container{
   margin: 30px;
   margin-left: 10px;
-}
-.btn-close{
+}.btn-close{
 	margin: 0px 5px;
-}
-.tweetbox-container {
+}.tweetbox-container {
   margin-bottom: 20px;
-}
-.tweetbox {
+}.tweetbox {
 	background-color: rgb(240, 247, 254);
 	padding: 20px;
 	padding-bottom: 60px;
 	border-radius: 5px;
-}
-.btnGroup {
+}.btnGroup {
   margin-top: 10px;
   display: flex;
   align-items: center;
-}
-.charCount {
+}.charCount {
   margin-right: 5px;
   color: gray;
-}
-.errCharCount {
+}.errCharCount {
   margin-right: 5px;
   color: red;
-}
-.update-btn{
+}.update-btn{
 	margin-right: 10px;
-}
-.form-inline ::webkit-input-placeholder {
+}.form-inline ::webkit-input-placeholder {
     color: grey !important;
-}
-.form-inline ::-ms-input-placeholder {
+}.form-inline ::-ms-input-placeholder {
     color: grey !important;
-}
-.form-inline ::-moz-placeholder {
+}.form-inline ::-moz-placeholder {
     color: grey !important;
-}
-.form-inline :-moz-placeholder {
+}.form-inline :-moz-placeholder {
     color: grey !important;
-}
-.panel-body ::webkit-input-placeholder {
+}.panel-body ::webkit-input-placeholder {
     color: grey !important;
-}
-.panel-body ::-ms-input-placeholder {
+}.panel-body ::-ms-input-placeholder {
     color: grey !important;
-}
-.panel-body ::-moz-placeholder {
+}.panel-body ::-moz-placeholder {
     color: grey !important;
 }
 .panel-body :-moz-placeholder {
     color: grey !important;
 }.tweet-form-modal .form-group ::webkit-input-placeholder {
     color: #00aced !important;
-}
-.tweet-form-modal .form-group ::-ms-input-placeholder {
+}.tweet-form-modal .form-group ::-ms-input-placeholder {
     color: #00aced !important;
-}
-.tweet-form-modal .form-group ::-moz-placeholder {
+}.tweet-form-modal .form-group ::-moz-placeholder {
     color: #00aced !important;
-}
-.tweet-form-modal .form-group :-moz-placeholder {
+}.tweet-form-modal .form-group :-moz-placeholder {
     color: #00aced !important;
-}
-.disabled{
+}.disabled{
     pointer-events:none;
-}
-.list-group-item { word-wrap: break-word; }
+}.list-group-item { word-wrap: break-word; }
 #loginForm{
 	max-width: 400px;
 	padding: 20px 38px 66px;

@@ -5,6 +5,22 @@ import './main.html';
 
 if (Meteor.isClient){
 	
+	Template.followUsers.events({  
+		'submit form': function(event) {
+			var searchUser = event.target.searchUser.value;
+			var foundUser = Meteor.call('findUser', searchUser, function(err, res) {
+				//if (res) Session.set('foundUser', res);
+				alert(res);
+			});
+			return false;
+		}
+	});
+
+
+	Template.newsFeed.onCreated(function() {  
+	  this.subscribe('tweets');
+	});
+	
 	/*************************** ADD TWEET MODAL ***************************************/
 	
 	Template.addTweetModal.onRendered(function () {  
@@ -17,9 +33,13 @@ if (Meteor.isClient){
 		  },
 		  'click .add-btn': function() { 
 			  var tweet = $('#modal_tweetText').val();
+			  var user_id =  Meteor.user()._id;
+			  var username = Meteor.user().emails[0].address;
+			  var createdAt = Date.now();
+			  Meteor.call('addTweet', tweet, user_id, username, createdAt);
+			  
 			  $('#modal_tweetText').val("");
 			  Session.set('numChars_', 0);
-			  tweets.insert({ text: tweet, user_id: Meteor.user()._id, email: Meteor.user().emails[0].address, createdAt: Date.now() });
 			  $('#tweetModal').modal('hide');
 			}
 	});
@@ -54,9 +74,12 @@ if (Meteor.isClient){
 		  },
 		  'click button': function() { 
 			  var tweet = $('#tweetText').val();
+			  var user_id =  Meteor.user()._id;
+			  var username = Meteor.user().username;
+			  var createdAt = Date.now();
+			  Meteor.call('addTweet', tweet, user_id, username, createdAt);
 			  $('#tweetText').val("");
 			  Session.set('numChars', 0);
-			  tweets.insert({ text: tweet, user_id: Meteor.user()._id, email: Meteor.user().emails[0].address, createdAt: Date.now() });
 			}
 	});
 	
@@ -138,14 +161,13 @@ if (Meteor.isClient){
 			e.preventDefault();
 			var update_id = document.getElementById("update_id").value;
 			var tweet = $('#update_tweetText').val();
-			tweets.update(update_id, {
-				 $set: { text: tweet },
-			});
+			Meteor.call('updateTweet', update_id, tweet);
 			$('#updateModal').modal('hide');
 		},
 		'click .delete-btn' : function(e){
 			e.preventDefault();
 			var id = this._id;
+			console.log(id);
 			 swal({
 				title: "Are you sure?",
 				text: "You will not be able to recover this tweet!",
@@ -158,15 +180,13 @@ if (Meteor.isClient){
 				closeOnCancel: false
 			},
 			function(isConfirm) {
-				tweets.remove(id);
 				if (isConfirm) {
+					Meteor.call('deleteTweet', id);
 					swal({
 						title: 'Deleted!',
 						text: 'Your tweet was successfully deleted!',
 						type: 'success'
-					}, function() {
-						//tweets.remove(id);
-					});
+					}, function() {});
 				} else {
 					swal("Cancelled", "Your tweet is safe :)", "error");
 				}
@@ -226,17 +246,15 @@ if (Meteor.isClient){
 	
 	$.validator.setDefaults({
 		rules: {
-			loginEmail: {
-				required: true,
-				email: true
+			loginUsername: {
+				required: true
 			},
 			loginPassword: {
 				required: true,
 				minlength: 6
 			},
-			registerEmail: {
-				required: true,
-				email: true
+			register: {
+				required: true
 			},
 			registerPassword: {
 				required: true,
@@ -250,16 +268,16 @@ if (Meteor.isClient){
 		},
 		messages: {
 			loginEmail: {
-				required: "You must enter an email address.",
-				email: "You've entered an invalid email address."
+				required: "You must enter an username.",
+				username: "You've entered an invalid username."
 			},
 			loginPassword: {
 				required: "You must enter a password.",
 				minlength: "Your password must be at least {0} characters."
 			},
 			registerEmail: {
-				required: "You must enter an email address.",
-				email: "You've entered an invalid email address."
+				required: "You must enter a username address.",
+				username: "You've entered an invalid username address."
 			},
 			registerPassword: {
 				required: "You must enter a password.",
@@ -276,13 +294,13 @@ if (Meteor.isClient){
 	Template.login.onRendered(function(){
 		var validator = $('#LoginForm').validate({
 			submitHandler: function(event){
-				var email = $('[name=loginEmail]').val();
+				var username = $('[name=loginUsername]').val();
 				var password = $('[name=loginPassword]').val();
-				Meteor.loginWithPassword(email, password, function(error){
+				Meteor.loginWithPassword(username, password, function(error){
 					if(error){
 						if(error.reason == "User not found"){
 							validator.showErrors({
-								loginEmail: "That email doesn't belong to a registered user."   
+								loginEmail: "That username doesn't belong to a registered user."   
 							});
 						}
 						if(error.reason == "Incorrect password"){
@@ -299,16 +317,16 @@ if (Meteor.isClient){
 	Template.register.onRendered(function(){
 		var validator = $('#RegisterForm').validate({
 			submitHandler: function(event){
-				var email = $('[name=registerEmail]').val();
+				var username = $('[name=registerUsername]').val();
 				var password = $('[name=registerPassword]').val();
 				Accounts.createUser({
-					email: email,
+					username: username,
 					password: password
 				}, function(error){
 					if(error){
-						if(error.reason == "Email already exists."){
+						if(error.reason == "Username already exists."){
 							validator.showErrors({
-								registerEmail: "That email already belongs to a registered user."   
+								registerEmail: "That username already belongs to a registered user."   
 							});
 						}
 					}
