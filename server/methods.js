@@ -13,7 +13,7 @@ Meteor.methods({
 		$set: { text: tweet },
 	});
   },
-  'addTweet': function(tweet, user_id, email, createdAt) {
-    tweets.insert({ text: tweet, user_id: user_id, email: email, createdAt: createdAt });
+  'addTweet': function(tweet, user_id, username, createdAt) {
+    tweets.insert({ text: tweet, user_id: user_id, username: username, createdAt: createdAt });
   }
 });

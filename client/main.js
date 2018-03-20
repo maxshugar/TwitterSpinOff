@@ -4,18 +4,6 @@ import { Mongo } from 'meteor/mongo'
 import './main.html';
 
 if (Meteor.isClient){
-	
-	Template.followUsers.events({  
-		'submit form': function(event) {
-			var searchUser = event.target.searchUser.value;
-			var foundUser = Meteor.call('findUser', searchUser, function(err, res) {
-				//if (res) Session.set('foundUser', res);
-				alert(res);
-			});
-			return false;
-		}
-	});
-
 
 	Template.newsFeed.onCreated(function() {  
 	  this.subscribe('tweets');
@@ -34,7 +22,7 @@ if (Meteor.isClient){
 		  'click .add-btn': function() { 
 			  var tweet = $('#modal_tweetText').val();
 			  var user_id =  Meteor.user()._id;
-			  var username = Meteor.user().emails[0].address;
+			  var username = Meteor.user().username;
 			  var createdAt = Date.now();
 			  Meteor.call('addTweet', tweet, user_id, username, createdAt);
 			  
@@ -112,7 +100,7 @@ if (Meteor.isClient){
 	});
 	
 	Template.registerHelper('isCurrentUser', function(username) {
-			if(username == Meteor.user().emails[0].address){
+			if(username == Meteor.user().username){
 				return true;
 			}
 			else{
