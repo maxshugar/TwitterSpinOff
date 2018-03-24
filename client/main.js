@@ -6,9 +6,77 @@ import './main.html';
 if (Meteor.isClient){
 
 	Template.newsFeed.onCreated(function() {  
-	  this.subscribe('tweets');
+		this.subscribe('tweets', Meteor.user().username);
+		this.subscribe('ownTweets', Meteor.user().username);
 	});
 	
+	/*************************** USER MANAGEMENT ***************************************/
+	Template.userManagement.onCreated( function() {
+		if (Meteor.user()) {
+		 Meteor.subscribe('relationships');
+	  }
+	});
+	
+	Template.userManagement.helpers({
+	  'tweets': function() {
+		if (Meteor.user()) {
+		  return tweets.find({ username: Meteor.user().username }).count();
+		}
+	  },
+	  'following': function() {
+		if (Meteor.user()) {
+		  return relationships.find({ follower: Meteor.user().username }).count();
+		}
+	  },
+	  'followers': function() {
+		if (Meteor.user()) {
+		  return relationships.find({ following: Meteor.user().username }).count();
+		}
+	  }
+	});	
+	
+	Template.followUsers.helpers({
+  'foundUser': function() {
+    return Session.get('foundUser');
+  },
+  'recommendedUsers': function() {
+    if (Meteor.user()) {
+      var currentFollowings = UserUtils.findFollowings(Meteor.user().username);
+      var recUsers = Meteor.users.find({
+        username: {
+          $nin: currentFollowings
+        }
+      }, {
+        fields: { 'username': 1 },
+        limit: 5
+      }).fetch();
+      return recUsers;
+    }
+  }
+});
+
+Template.followUsers.events({
+  'submit form': function(event) {
+    var searchUser = event.target.searchUser.value;
+    var foundUser = Meteor.call('findUser', searchUser, function(err, res) {
+      if (res) Session.set('foundUser', res);
+    });
+    return false;
+  },
+  'click #follow': function() {
+    Meteor.call('followUser', Session.get('foundUser').username);
+  },
+  'click #followRec': function(event) {
+    Meteor.call('followUser', this.username);
+  }
+});
+
+Template.followUsers.onCreated(function() {
+  if (Meteor.user()) {
+    this.subscribe('users', Meteor.user().username)
+    this.subscribe('followings', Meteor.user().username);
+  }
+});
 	/*************************** ADD TWEET MODAL ***************************************/
 	
 	Template.addTweetModal.onRendered(function () {  
@@ -32,7 +100,7 @@ if (Meteor.isClient){
 			}
 	});
 	
-	Template.addTweetModal.helpers({
+	Template.addTweetModal.helpers({	
 		charCount: function() {
 			return 140 - Session.get('numChars_');
 		},
@@ -60,7 +128,7 @@ if (Meteor.isClient){
 		'input #tweetText': function(){
 			Session.set('numChars', $('#tweetText').val().length);
 		  },
-		  'click button': function() { 
+		  'click button': function() {
 			  var tweet = $('#tweetText').val();
 			  var user_id =  Meteor.user()._id;
 			  var username = Meteor.user().username;
@@ -72,7 +140,7 @@ if (Meteor.isClient){
 	});
 	
 	Template.tweetBox.helpers({
-		charCount: function() {
+		charCount: function(){
 			return 140 - Session.get('numChars');
 		},
 		charClass: function() {
@@ -186,7 +254,13 @@ if (Meteor.isClient){
 			document.getElementById("update_tweetText").value = this.text; 
 			document.getElementById("update_id").value = this._id;
 			Session.set('numChars__', $('#update_tweetText').val().length);
-		}
+		},
+		'click .unfollow-btn' : function(e){
+			e.preventDefault();
+			var follower = Meteor.user().username
+			var following = this.username;
+			Meteor.call('unfollowUser', follower, following);
+		},
 	});
 	
 	/****************************************USER LOGIN********************************/

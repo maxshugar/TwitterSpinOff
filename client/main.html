@@ -63,9 +63,9 @@
 	
 	<div class="container">
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="card card-body bg-light" style="margin:5px;">
-					Profile
+					{{> userManagement}}
 				</div>
 				<div class="card card-body bg-light"  style="margin:5px;">
 					<h3>Trends</h3>
@@ -76,7 +76,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-5">
 				{{> tweetBox}}
 				{{#if tweets.count}}
 					<div class="list-group">
@@ -99,6 +99,8 @@
 											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-refresh" aria-hidden="true"></span> Update</button>
 											<button type="button" class="btn btn-primary delete-btn"><span class="fa fa-close" aria-hidden="true"></span> Delete</button>
 										</div>
+										{{else}}
+											<button type="button" class="btn btn-primary unfollow-btn"><span class="fa fa-undo" aria-hidden="true"></span> Unfollow</button>
 									{{/if}}
 								</div>
 							</div>
@@ -147,7 +149,7 @@
 			</div>
 			<div class="col-md-3">
 				<div class="card card-body bg-light" style="margin:5px;">
-
+					{{> followUsers}}
 				</div>
 			</div>
 		</div>
@@ -170,6 +172,62 @@
 		</div>
 	  </div>
 	</div>
+</template>
+
+<template name="userManagement">
+  <div class="user-container">
+    <div class="panel panel-default userBox">
+      <div class="panel-body">
+        <!-- Message for logged in user -->
+        <p>Hello <strong>@{{currentUser.username}}</strong></p>
+		<table class="table">
+		  <thead>
+			<tr>
+			  <th scope="col">Tweets</th>
+			  <th scope="col">Following</th>
+			  <th scope="col">Followers</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr>
+				<td class="tableContent">{{tweets}}</td>
+				<td class="tableContent">{{following}}</td>
+				<td class="tableContent">{{followers}}</td>
+			</tr>
+		  </tbody>
+		</table>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="followUsers">
+  {{#if currentUser}}
+  <div class="follow-container">
+    <div class="panel panel-default followBox">
+      <div class="panel-body">
+        <!-- Input box for user to follow -->
+        <form class="form-inline">
+          <input type="text" class="form-control" id="searchUser" placeholder="Search for user">
+          <button type="submit" class="btn btn-info">Search</button>
+        </form>
+        <!-- Display box found through search-->
+        {{#if foundUser}}
+        <div class="found-user">
+          <button type="button" class="btn btn-default" id="follow">Follow @{{foundUser.username}}</button>
+        </div>
+        {{/if}}
+        <!-- List of people to follow -->
+        <div class="recommend-users">
+          <h5>Who to follow:</h5>
+          {{#each recommendedUsers}}
+            <p><button type="button" class="btn btn-default" id="followRec">Follow @{{this.username}}</button></p>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/if}}
 </template>
 
 <template name="tweetBox">

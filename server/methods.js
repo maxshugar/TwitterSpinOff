@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 
-Meteor.publish('tweets', function() {  
-  return tweets.find();
+Meteor.startup(function () {
+  relationships._ensureIndex({follower: 1, following: 1}, {unique: 1});
 });
 
-Meteor.methods({  
+Meteor.methods({
   'deleteTweet': function(id) {
     tweets.remove(id);
   },
