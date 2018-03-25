@@ -1,7 +1,17 @@
 /* CSS declarations go here */
 /* https://freebiesupply.com/blog/css-button-hover-effects/ */
-.tweetfeed{
-  background-color: rgb(240, 247, 254);
+.user-container h4 {
+  color: gray;
+}.user-container .table th, .table td {
+   border-top: none;
+}.user-container .tableHeader {
+  color: gray;
+}.user-container .tableContent {
+  color: white;
+  font-size: 150%;
+}.user-container .fullbutton {
+  width: 100%;
+}.tweetfeed{  background-color: rgb(240, 247, 254);
 }.tweetfeed-container{
   margin: 30px;
   margin-left: 10px;

@@ -44,7 +44,7 @@
 					</li>
 				</ul>
 				<form class="form-inline">
-					<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+					<input class="form-control mr-sm-2" type="search" id="searchUser" placeholder="Search for User" aria-label="Search">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
 				<li class="nav-item dropdown" style="list-style: none">
@@ -64,16 +64,12 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4">
-				<div class="card card-body bg-light" style="margin:5px;">
+				<!--<div class="card card-body text-white bg-primary mb-3" style="margin:5px;">-->
+				<div class="card text-white bg-primary">
 					{{> userManagement}}
 				</div>
-				<div class="card card-body bg-light"  style="margin:5px;">
-					<h3>Trends</h3>
-					<ul>
-						<li>#meteorJS</li>
-						<li>#CSS</li>
-						<li>#ford Fiesta</li>
-					</ul>
+				<div class="card text-white bg-primary"  style="margin-top:5px;">
+					{{> followUsers}}
 				</div>
 			</div>
 			<div class="col-md-5">
@@ -149,7 +145,12 @@
 			</div>
 			<div class="col-md-3">
 				<div class="card card-body bg-light" style="margin:5px;">
-					{{> followUsers}}
+					<h3>Trends</h3>
+					<ul>
+						<li>#meteorJS</li>
+						<li>#CSS</li>
+						<li>#ford Fiesta</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -175,54 +176,61 @@
 </template>
 
 <template name="userManagement">
-  <div class="user-container">
-    <div class="panel panel-default userBox">
-      <div class="panel-body">
-        <!-- Message for logged in user -->
-        <p>Hello <strong>@{{currentUser.username}}</strong></p>
-		<table class="table">
-		  <thead>
-			<tr>
-			  <th scope="col">Tweets</th>
-			  <th scope="col">Following</th>
-			  <th scope="col">Followers</th>
-			</tr>
-		  </thead>
-		  <tbody>
-			<tr>
-				<td class="tableContent">{{tweets}}</td>
-				<td class="tableContent">{{following}}</td>
-				<td class="tableContent">{{followers}}</td>
-			</tr>
-		  </tbody>
-		</table>
-      </div>
-    </div>
-  </div>
+
+<!-- Message for logged in user -->
+	<div class="card-header"><center><h3 style="margin-top: 10px;">Welcome <strong>@{{currentUser.username}}</strong></h3></center></div>
+	  <div class="user-container">
+		<div class="panel panel-default userBox">
+		  <div class="panel-body"  style="overflow-x: auto;">
+			<table class="table" style="margin-top: 10px;">
+			  <thead>
+				<tr style="text-align: center;">
+				  <th scope="col">Tweets</th>
+				  <th scope="col">Following</th>
+				  <th scope="col">Followers</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr>
+					<td align="center" class="tableContent">{{tweets}}</td>
+					<td align="center" class="tableContent">{{following}}</td>
+					<td align="center" class="tableContent">{{followers}}</td>
+				</tr>
+			  </tbody>
+			</table>
+		  </div>
+		</div>
+	  </div>
 </template>
 
 <template name="followUsers">
   {{#if currentUser}}
   <div class="follow-container">
     <div class="panel panel-default followBox">
-      <div class="panel-body">
-        <!-- Input box for user to follow -->
-        <form class="form-inline">
-          <input type="text" class="form-control" id="searchUser" placeholder="Search for user">
-          <button type="submit" class="btn btn-info">Search</button>
-        </form>
-        <!-- Display box found through search-->
-        {{#if foundUser}}
-        <div class="found-user">
-          <button type="button" class="btn btn-default" id="follow">Follow @{{foundUser.username}}</button>
-        </div>
-        {{/if}}
+      <div class="panel-body">        
         <!-- List of people to follow -->
         <div class="recommend-users">
-          <h5>Who to follow:</h5>
-          {{#each recommendedUsers}}
-            <p><button type="button" class="btn btn-default" id="followRec">Follow @{{this.username}}</button></p>
-          {{/each}}
+			<div class="card-header">
+			<h3 style="margin-bottom: 20px;">Search Results</h3>
+			<!-- Display box found through search-->
+			{{#if foundUser}}
+			<div class="found-user">
+			  <button type="button" class="btn btn-default" id="follow">Follow @{{foundUser.username}}</button>
+			</div>
+			{{else}}
+				<button type="button" class="btn btn-default">No User Found</button>
+			{{/if}}
+			</div>
+			<div class="card-body">
+				<h3 style="margin-bottom: 20px;">Reccomended Users</h3>
+				{{#if recommendedUsers.length}}
+					{{#each recommendedUsers}}
+						<p><button type="button" class="btn btn-default" id="followRec">Follow @{{this.username}}</button></p>
+					{{/each}}
+				{{else}}
+					<button type="button" class="btn btn-default">No Users Found</button>
+				{{/if}}
+			</div>
         </div>
       </div>
     </div>
