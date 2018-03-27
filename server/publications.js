@@ -27,3 +27,9 @@ Meteor.publish('users', function(username) {
     limit: 100
   });
 });
+
+/*
+Meteor.publish('word_count', function(username) {
+  return Meteor.word_count.find({});
+});
+*/

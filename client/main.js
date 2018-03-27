@@ -271,6 +271,10 @@ Template.followUsers.onCreated(function() {
 	/****************************************USER LOGIN********************************/
 	
 	Template.body.onRendered(function() {
+		//console.log(word_count.find({})); // tweets.find({}
+		Meteor.call('getTrending', function(error, result) {
+			console.log(result);
+		});
 	  let settings = 'settings.json';
 	  this.autorun(() => {
 		if (particlesJS) {
@@ -320,7 +324,7 @@ Template.followUsers.onCreated(function() {
 				required: true,
 				minlength: 6
 			},
-			register: {
+			registerUsername: {
 				required: true
 			},
 			registerPassword: {
@@ -334,7 +338,7 @@ Template.followUsers.onCreated(function() {
 			}
 		},
 		messages: {
-			loginEmail: {
+			loginUsername: {
 				required: "You must enter an username.",
 				username: "You've entered an invalid username."
 			},
@@ -342,7 +346,7 @@ Template.followUsers.onCreated(function() {
 				required: "You must enter a password.",
 				minlength: "Your password must be at least {0} characters."
 			},
-			registerEmail: {
+			registerUsername: {
 				required: "You must enter a username address.",
 				username: "You've entered an invalid username address."
 			},
@@ -367,7 +371,7 @@ Template.followUsers.onCreated(function() {
 					if(error){
 						if(error.reason == "User not found"){
 							validator.showErrors({
-								loginEmail: "That username doesn't belong to a registered user."   
+								loginUsername: "That username doesn't belong to a registered user."   
 							});
 						}
 						if(error.reason == "Incorrect password"){
@@ -393,7 +397,7 @@ Template.followUsers.onCreated(function() {
 					if(error){
 						if(error.reason == "Username already exists."){
 							validator.showErrors({
-								registerEmail: "That username already belongs to a registered user."   
+								registerUsername: "That username already belongs to a registered user."   
 							});
 						}
 					}
