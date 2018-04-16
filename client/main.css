@@ -1,41 +1,44 @@
-/* CSS declarations go here */
-/* https://freebiesupply.com/blog/css-button-hover-effects/ */
-.user-container h4 {
-  color: gray;
+@media (max-width: 1000px) {
+    .text-muted {
+        display:none;
+    }
+}.update-btn{
+	margin-right: 10px;
+}.user-container h4 {
+	color: gray;
 }.user-container .table th, .table td {
-   border-top: none;
+	border-top: none;
 }.user-container .tableHeader {
-  color: gray;
+	color: gray;
 }.user-container .tableContent {
-  color: white;
-  font-size: 150%;
+	color: white;
+	font-size: 150%;
 }.user-container .fullbutton {
-  width: 100%;
-}.tweetfeed{  background-color: rgb(240, 247, 254);
+	width: 100%;
+}.tweetfeed{  
+	background-color: rgb(240, 247, 254);
 }.tweetfeed-container{
-  margin: 30px;
-  margin-left: 10px;
+	margin: 30px;
+	margin-left: 10px;
 }.btn-close{
 	margin: 0px 5px;
 }.tweetbox-container {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }.tweetbox {
 	background-color: rgb(240, 247, 254);
 	padding: 20px;
 	padding-bottom: 60px;
 	border-radius: 5px;
 }.btnGroup {
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
 }.charCount {
-  margin-right: 5px;
-  color: gray;
+	margin-right: 5px;
+	color: gray;
 }.errCharCount {
-  margin-right: 5px;
-  color: red;
-}.update-btn{
-	margin-right: 10px;
+	margin-right: 5px;
+	color: red;
 }.form-inline ::webkit-input-placeholder {
     color: grey !important;
 }.form-inline ::-ms-input-placeholder {
@@ -50,8 +53,7 @@
     color: grey !important;
 }.panel-body ::-moz-placeholder {
     color: grey !important;
-}
-.panel-body :-moz-placeholder {
+}.panel-body :-moz-placeholder {
     color: grey !important;
 }.tweet-form-modal .form-group ::webkit-input-placeholder {
     color: #00aced !important;
@@ -63,8 +65,9 @@
     color: #00aced !important;
 }.disabled{
     pointer-events:none;
-}.list-group-item { word-wrap: break-word; }
-#loginForm{
+}.list-group-item { 
+	word-wrap: break-word; 
+}#loginForm{
 	max-width: 400px;
 	padding: 20px 38px 66px;
 	margin: 10% auto;
@@ -83,7 +86,6 @@
 	color: white;
 	-webkit-transition: all 600ms ease;
     transition: all 600ms ease;
-	
 }
 form h1{
 	margin: 20px;

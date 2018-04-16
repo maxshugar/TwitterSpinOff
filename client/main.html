@@ -30,7 +30,6 @@
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-		
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
@@ -50,9 +49,6 @@
 				<li class="nav-item dropdown" style="list-style: none">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#">Action</a>
-							<a class="dropdown-item" href="#">Another action</a>
-							<div class="dropdown-divider"></div>
 							<a class="dropdown-item logout" href="#">Logout</a>
 						</div>
 				</li>
@@ -72,7 +68,17 @@
 					{{> followUsers}}
 				</div>
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-3 order-md-2">
+				<div class="card card-body bg-light" style="margin:5px;">
+					<h4>Trending</h4>
+					<ul style="padding: 0px; margin: 0px;">
+						{{#each trends}}
+							<li style="list-style-type: none;">{{_id}} - {{value}}</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-5 order-md-1">
 				{{> tweetBox}}
 				{{#if tweets.count}}
 					<div class="list-group">
@@ -92,12 +98,13 @@
 									<small class="text-muted">{{formatDate createdAt}}</small>
 									{{#if isCurrentUser username}}
 										<div>
-											<button type="button" class="btn btn-primary update-btn"><span class="fa fa-refresh" aria-hidden="true"></span> Update</button>
-											<button type="button" class="btn btn-primary delete-btn"><span class="fa fa-close" aria-hidden="true"></span> Delete</button>
+											<button type="button" class="btn btn-primary update-btn btn-sm"><span class="fa fa-refresh" aria-hidden="true"></span> Update</button>
+											<button type="button" class="btn btn-primary delete-btn btn-sm"><span class="fa fa-close" aria-hidden="true"></span> Delete</button>
 										</div>
 										{{else}}
-											<button type="button" class="btn btn-primary unfollow-btn"><span class="fa fa-undo" aria-hidden="true"></span> Unfollow</button>
+											<button type="button" class="btn btn-primary unfollow-btn btn-sm"><span class="fa fa-undo" aria-hidden="true"></span> Unfollow</button>
 									{{/if}}
+									
 								</div>
 							</div>
 						</div>
@@ -143,16 +150,6 @@
 					</div>
 				{{/if}}
 			</div>
-			<div class="col-md-3">
-				<div class="card card-body bg-light" style="margin:5px;">
-					<h3>Trends</h3>
-					<ul>
-						<li>#meteorJS</li>
-						<li>#CSS</li>
-						<li>#ford Fiesta</li>
-					</ul>
-				</div>
-			</div>
 		</div>
 	</div>
 	
@@ -176,9 +173,8 @@
 </template>
 
 <template name="userManagement">
-
 <!-- Message for logged in user -->
-	<div class="card-header"><center><h3 style="margin-top: 10px;">Welcome <strong>@{{currentUser.username}}</strong></h3></center></div>
+	<div class="card-header"><center><h3 style="margin-top: 10px;"><strong>@{{currentUser.username}}</strong></h3></center></div>
 	  <div class="user-container">
 		<div class="panel panel-default userBox">
 		  <div class="panel-body"  style="overflow-x: auto;">
@@ -211,7 +207,7 @@
         <!-- List of people to follow -->
         <div class="recommend-users">
 			<div class="card-header">
-			<h3 style="margin-bottom: 20px;">Search Results</h3>
+			<h4 style="margin-bottom: 20px;">Search Results</h4>
 			<!-- Display box found through search-->
 			{{#if foundUser}}
 			<div class="found-user">
@@ -222,7 +218,7 @@
 			{{/if}}
 			</div>
 			<div class="card-body">
-				<h3 style="margin-bottom: 20px;">Reccomended Users</h3>
+				<h4 style="margin-bottom: 20px;">Reccomended</h4>
 				{{#if recommendedUsers.length}}
 					{{#each recommendedUsers}}
 						<p><button type="button" class="btn btn-default" id="followRec">Follow @{{this.username}}</button></p>

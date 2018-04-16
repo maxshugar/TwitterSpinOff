@@ -43,7 +43,7 @@ Meteor.methods({
             var result = tweets.mapReduce(map, reduce, {query: {}, out: "Tags", verbose: true});
 
             // now return all the tags, ordered by usage
-            return Tags.find({ _id : /#/i } ,{ sort: {'value': -1}}).fetch();
+            return Tags.find({ _id : /#/i } , { sort: {'value': -1}, limit: 5}).fetch();
 			//, {limit : 3}
   }
 });

@@ -4,11 +4,16 @@ import { Mongo } from 'meteor/mongo'
 import './main.html';
 
 if (Meteor.isClient){
-
 	Template.newsFeed.onCreated(function() {  
 		this.subscribe('tweets', Meteor.user().username);
 		this.subscribe('ownTweets', Meteor.user().username);
 	});
+	
+	function updateTrending(){
+		 Meteor.call('getTrending', function(error, result) {
+			Session.set('trending_', result);
+		});
+	}
 	
 	/*************************** USER MANAGEMENT ***************************************/
 	Template.userManagement.onCreated( function() {
@@ -86,7 +91,7 @@ Template.followUsers.onCreated(function() {
 			  var username = Meteor.user().username;
 			  var createdAt = Date.now();
 			  Meteor.call('addTweet', tweet, user_id, username, createdAt);
-			  
+			  updateTrending();
 			  $('#modal_tweetText').val("");
 			  Session.set('numChars_', 0);
 			  $('#tweetModal').modal('hide');
@@ -129,6 +134,7 @@ Template.followUsers.onCreated(function() {
 			  Meteor.call('addTweet', tweet, user_id, username, createdAt);
 			  $('#tweetText').val("");
 			  Session.set('numChars', 0);
+			  updateTrending();
 			}
 	});
 	
@@ -172,8 +178,8 @@ Template.followUsers.onCreated(function() {
 	Template.newsFeed.helpers({
 		tweets: function(){
 			return tweets.find({}, {
-				sort: { createdAt: -1 },
-				limit: 10
+				sort: { createdAt: -1 }//,
+				//limit: 10
 			});
 		},
 		charCount: function() {
@@ -190,6 +196,9 @@ Template.followUsers.onCreated(function() {
 			if (Session.get('numChars__') <= 0 || Session.get('numChars__') > 140) {
 				return 'disabled';
 			}
+		},
+		trends: function(){
+			return Session.get("trending_");
 		}
 	});
 	
@@ -197,6 +206,7 @@ Template.followUsers.onCreated(function() {
 	
 	Template.newsFeed.onRendered(function () {  
 	  Session.set('numChars__', 0);
+		updateTrending();
 	});
 	
 	Template.newsFeed.events({
@@ -224,11 +234,11 @@ Template.followUsers.onCreated(function() {
 			var tweet = $('#update_tweetText').val();
 			Meteor.call('updateTweet', update_id, tweet);
 			$('#updateModal').modal('hide');
+			updateTrending();
 		},
 		'click .delete-btn' : function(e){
 			e.preventDefault();
 			var id = this._id;
-			console.log(id);
 			 swal({
 				title: "Are you sure?",
 				text: "You will not be able to recover this tweet!",
@@ -243,6 +253,7 @@ Template.followUsers.onCreated(function() {
 			function(isConfirm) {
 				if (isConfirm) {
 					Meteor.call('deleteTweet', id);
+					updateTrending();
 					swal({
 						title: 'Deleted!',
 						text: 'Your tweet was successfully deleted!',
@@ -265,21 +276,16 @@ Template.followUsers.onCreated(function() {
 			var follower = Meteor.user().username
 			var following = this.username;
 			Meteor.call('unfollowUser', follower, following);
-		},
+		}
 	});
 	
 	/****************************************USER LOGIN********************************/
 	
 	Template.body.onRendered(function() {
-		//console.log(word_count.find({})); // tweets.find({}
-		Meteor.call('getTrending', function(error, result) {
-			console.log(result);
-		});
 	  let settings = 'settings.json';
 	  this.autorun(() => {
 		if (particlesJS) {
 		  console.log(`loading particles.js config from "${settings}"...`)
-		  /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
 		  particlesJS.load('particles-js', settings, function () {
 			console.log('callback - particles.js config loaded');
 		  });
