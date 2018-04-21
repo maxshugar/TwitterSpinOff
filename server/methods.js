@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { tweets } from '/lib/collections/tweets.js'
 
 Meteor.startup(function () {
   relationships._ensureIndex({follower: 1, following: 1}, {unique: 1});

@@ -31,3 +31,5 @@ reywood:publish-composite
 fentas:mapreduce
 monbro:mongodb-mapreduce-aggregation
 cultofcoders:mocha
+xolvio:cleaner
+dburles:factory
