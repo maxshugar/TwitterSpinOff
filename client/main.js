@@ -10,11 +10,9 @@ if (Meteor.isClient){
 	});
 	
 	function updateTrending(){
-		if(tweets){
-			 Meteor.call('getTrending', function(error, result) {
-				Session.set('trending_', result);
-			});
-		}
+			Meteor.call('getTrending', function(error, result) {
+			Session.set('trending_', result);
+		});
 	}
 	
 	/*************************** USER MANAGEMENT ***************************************/
@@ -207,8 +205,12 @@ Template.followUsers.onCreated(function() {
 	/************************** News Feed **************************************************/
 	
 	Template.newsFeed.onRendered(function () {  
-	  Session.set('numChars__', 0);
-		updateTrending();
+		Session.set('numChars__', 0);
+		
+		if(tweets.find().count() != 0){
+			updateTrending();
+		}
+
 	});
 	
 	Template.newsFeed.events({
