@@ -10,9 +10,11 @@ if (Meteor.isClient){
 	});
 	
 	function updateTrending(){
-		 Meteor.call('getTrending', function(error, result) {
-			Session.set('trending_', result);
-		});
+		if(tweets){
+			 Meteor.call('getTrending', function(error, result) {
+				Session.set('trending_', result);
+			});
+		}
 	}
 	
 	/*************************** USER MANAGEMENT ***************************************/
